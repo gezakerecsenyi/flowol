@@ -68,4 +68,4 @@ with all subsequent actions contained in `next`.
 }
 ```
 
-The names used in the `property` property refer to the names of outputs as defined in the [mimic setup](https://github.com/gezakerecsenyi/flowol/#usage-instructions). The items in the `value` property refer to the value to set the respective (at the same index) `property` to. For example, in the above demo, the "light" output would be set to `true`, while the "heat" output would be set to `6`. You can set as many or as few of the outputs as you wish.
+The names used in the `property` property refer to the names of outputs as defined in the [mimic setup](https://github.com/gezakerecsenyi/flowol/#mimic-definition). The items in the `value` property refer to the value to set the respective (at the same index) `property` to. For example, in the above demo, the "light" output would be set to `true`, while the "heat" output would be set to `6`. You can set as many or as few of the outputs as you wish.
