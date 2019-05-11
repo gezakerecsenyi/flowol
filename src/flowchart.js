@@ -11,9 +11,9 @@ class Flowol {
       if (start.type === "start"){
         if (start.on === "start"){
           sendOff(start.next, 0);
+        } else if (start.type === "sub"){
+          //Do stuff
         }
-      } else if (start.type === "sub"){
-        //Do stuff
       } else {
         error("item found outside of 'start' statement");
       }
