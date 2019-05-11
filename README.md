@@ -17,9 +17,9 @@ For example,
 
 ```
 {
-  outputs: {
-    light: false,
-    heating: 3
+  "outputs": {
+    "light": false,
+    "heating": 3
   }
 }
 ```
