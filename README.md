@@ -59,9 +59,12 @@ with all subsequent actions contained in `next`.
 
 ```
 {
-  "type": "output"
-  "property": ["light", "heat"] // An array of the names of outputs
-  "value": [true, 6] // An array of corresponding values
+  "type": "output",
+  "property": ["light", "heat"], // An array of the names of outputs
+  "value": [true, 6], // An array of corresponding values
+  "next": [
+    ...
+  ]
 }
 ```
 
