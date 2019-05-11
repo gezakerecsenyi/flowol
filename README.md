@@ -18,7 +18,7 @@ Run the file by creating a boilerplate HTML file, importing `src/flowchart.js` i
 
 Firstly, create an array. This will contain all of our initial 'threads', and can be built upon. The format of a start thread is as follows:
 
-```json
+```hjson
 [{
   "type": "start",
   "on": "start" // When subroutines are introduced, they can be referenced here.
