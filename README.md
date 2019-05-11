@@ -1,8 +1,6 @@
 # Flowol
 A clone of Flowol to allow for custom features, such as mimic creation, without the cost.
 
-*It doesn't look like much code now, but the functionality itself is **quite** complicated.*
-
 ## Usage instructions
 
 Run the file by creating a boilerplate HTML file, importing `src/flowchart.js` in the head, and including the following code in the body:
