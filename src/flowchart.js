@@ -1,11 +1,26 @@
 class Flowol {
-  resolveFlow(flowchart){
-    let outputs = {
-      light: false,
-      bulb: true
+  resolveFlow(flowchart, mimic){
+
+    function error(err, prefix){ 
+      // To allow for easy changing of how errors are thrown, e.g implementation into UI
+      throw Error((!prefix? "Flowol error - " : prefix + " ") + err);
     }
 
-    let threads = [];
+    let outputs = mimic.outputs;
+
+    function checkFormat(value){
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean"){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    Object.keys(outputs).forEach(property=>{
+      if (!checkFormat(outputs[property])){
+        error("Illegal value type '" + typeof outputs[property] + "' in mimic definition of output '" + property + "'");
+      }
+    });
 
     flowchart.forEach(start=>{
       if (start.type === "start"){
@@ -19,11 +34,7 @@ class Flowol {
       }
     });
 
-    function error(err){
-      throw Error(err);
-    }
-
-    function sendOff(what, when){
+    function sendOff(what, when){ // Controls async processing of multiple threads
       what.forEach(thread=>{
         readThread(thread, when);
       });
@@ -43,6 +54,10 @@ class Flowol {
             case "output":
               thread.property.forEach((property, i)=>{
                 let value = thread.value[i];
+
+                if (!checkFormat(value)){
+                  error("Cannot set property '" + property + "' to illegal value type '" + typeof value + "'");
+                }
 
                 if (outputs[property] !== undefined){
                   outputs[property] = value;
