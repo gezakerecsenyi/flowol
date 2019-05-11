@@ -7,6 +7,7 @@ class Flowol {
     }
 
     let outputs = mimic.outputs;
+    let inputs = mimic.inputs
 
     function checkFormat(value){
       if (typeof value === "string" || typeof value === "number" || typeof value === "boolean"){
@@ -56,7 +57,7 @@ class Flowol {
                 let value = thread.value[i];
 
                 if (!checkFormat(value)){
-                  error("Cannot set property '" + property + "' to illegal value type '" + typeof value + "'");
+                  error("Cannot set property '" + property + "' to illegal value type '" + (typeof value) + "'");
                 }
 
                 if (outputs[property] !== undefined){
@@ -72,6 +73,60 @@ class Flowol {
             //Delays
             case "delay":
               sendOff(thread.next, thread.duration);
+              break;
+            
+            //Decisions
+            case "decision":
+              let base;
+              if (thread.test.input){
+                base = inputs[thread.test.input];
+              } else if (thread.test["var"]){
+                base = inputs[thread.test["var"]];
+              } else if (thread.test["data"]) {
+                base = thread.test["data"];
+              } else {
+                error("no base test provided in decision");
+              }
+
+              let comparison;
+              if (thread.comparison.input){
+                comparison = inputs[thread.comparison.input];
+              } else if (thread.comparison["var"]){
+                comparison = inputs[thread.comparison["var"]];
+              } else if (thread.comparison["data"]) {
+                comparison = thread.comparison["data"];
+              } else {
+                error("no comparison test provided in decision");
+              }
+              
+              let isCorrect;
+              switch (thread.question){
+                case "equal":
+                  isCorrect = base === comparison;
+                  break;
+                case "less":
+                  isCorrect = base < comparison
+                  break;
+                case "more":
+                  isCorrect = base > comparison
+                  break;
+                case "lessorequal":
+                  isCorrect = base <= comparison
+                  break;     
+                case "moreorequal":
+                  isCorrect = base >= comparison
+                  break;
+                case "notequal":
+                  isCorrect = base !== comparison
+                  break;                                                
+              }
+
+              if (isCorrect){
+                sendOff(thread["true"], 0);
+              } else {
+                sendOff(thread["false"], 0)
+              }
+
               break;
           }
         }
