@@ -24,7 +24,7 @@ For example,
 }
 ```
 
-with each property inside `outputs` being the name of an output, and the values being the respective defaults. The defaults can be either of type `string`, `int` or `boolean`.
+with each property inside `outputs` being the name of an output, and the values being the respective defaults. The defaults can be either of type `string`, `int`, `float` or `boolean`.
 
 ### Temporary instruction - JSON format
 **Because there is no click-and-drag editor *(yet)*, you'll need to write all flowcharts in JSON.**
