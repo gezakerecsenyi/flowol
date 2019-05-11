@@ -15,8 +15,15 @@ Run the file by creating a boilerplate HTML file, importing `src/flowchart.js` i
 
 For example,
 
-```
+```json
 {
+  "vars": {
+    "totalEnergy": 112
+  },
+  "inputs": {
+    "sun": 5,
+    "lightswitch": true
+  },
   "outputs": {
     "light": false,
     "heating": 3
@@ -24,7 +31,11 @@ For example,
 }
 ```
 
-with each property inside `outputs` being the name of an output, and the values being the respective defaults. The defaults can be either of type `string`, `int`, `float` or `boolean`.
+Each property inside **outputs** is the name of an output, and the values being the respective defaults. The defaults can be either of type `string`, `int`, `float` or `boolean`.
+
+Each property inside **inputs** is the name of an input. The values are the default values of the input, of type `string`, `int`, `float` or `boolean`.
+
+Each property inside **vars** is the name of a global variable, with the value representing the default state. The default state can be of type `string`, `int`, `float` or `boolean`.
 
 ### Temporary instruction - JSON format
 **Because there is no click-and-drag editor *(yet)*, you'll need to write all flowcharts in JSON.**
