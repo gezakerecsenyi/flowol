@@ -7,7 +7,10 @@ class Flowol {
     }
 
     let outputs = mimic.outputs;
-    let inputs = mimic.inputs
+    let inputs = mimic.inputs;
+    let vars = mimic.vars;
+
+    let subs = {};
 
     function checkFormat(value){
       if (typeof value === "string" || typeof value === "number" || typeof value === "boolean"){
@@ -21,7 +24,7 @@ class Flowol {
       if( o.id === id ){
         return o;
       }
-      var result, p; 
+      let result, p; 
       for (p in o) {
         if(o.hasOwnProperty(p) && typeof o[p] === 'object') {
           result = findById(o[p], id);
@@ -43,8 +46,8 @@ class Flowol {
       if (start.type === "start"){
         if (start.on === "start"){
           sendOff(start.next, 0);
-        } else if (start.type === "sub"){
-          //Do stuff
+        } else {
+          subs[start.on] = start.next;
         }
       } else {
         error("item found outside of 'start' statement");
@@ -97,7 +100,7 @@ class Flowol {
               if (thread.test["input"]){
                 base = inputs[thread.test["input"]];
               } else if (thread.test["var"]){
-                base = inputs[thread.test["var"]];
+                base = vars[thread.test["var"]];
               } else if (thread.test["data"]) {
                 base = thread.test["data"];
               } else {
@@ -108,7 +111,7 @@ class Flowol {
               if (thread.comparison["input"]){
                 comparison = inputs[thread.comparison["input"]];
               } else if (thread.comparison["var"]){
-                comparison = inputs[thread.comparison["var"]];
+                comparison = vars[thread.comparison["var"]];
               } else if (thread.comparison["data"]) {
                 comparison = thread.comparison["data"];
               } else {
@@ -142,7 +145,6 @@ class Flowol {
               } else {
                 sendOff(thread["false"], 0)
               }
-
               break;
             
             case "goto":
@@ -154,6 +156,41 @@ class Flowol {
                 error("no item found with id '" + thread.destination.toString() + "'")
               }
               break;
+
+            case "call":
+              sendOff(subs[thread.target], 0);
+              break;
+            
+            case "set":
+              switch (thread.to.type){
+                case "data":
+                  vars[thread["var"]] = thread.to.val;
+                  break;
+                case "add":
+                  vars[thread["var"]] += thread.to.val;
+                  break;
+                case "sub":
+                  vars[thread["var"]] -= thread.to.val;
+                  break;
+                case "mul":
+                  vars[thread["var"]] *= thread.to.val;
+                  break;
+                case "div":
+                  vars[thread["var"]] /= thread.to.val;
+                  break;
+                case "mod":
+                  vars[thread["var"]] % thread.to.val;
+                  break;           
+                case "flr":
+                  vars[thread["var"]] = Math.floor(thread.to.val);
+                  break;
+                case "ceil":
+                  vars[thread["var"]] = Math.ceil(thread.to.val);
+                  break;
+                case "rnd":
+                  vars[thread["var"]] = Math.round(thread.to.val);
+                  break;                                         
+              }
           }
         }
       }, delay);
