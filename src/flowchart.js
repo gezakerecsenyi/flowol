@@ -62,7 +62,6 @@ class Flowol {
 
     function readThread(thread, delay){
       window.setTimeout(function(){
-        console.log(outputs);
         if (thread.type==="end"){
           if (thread.next){
             error("cannot execute statement after 'end' statement!");
