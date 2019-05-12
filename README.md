@@ -82,3 +82,39 @@ with all subsequent actions contained in `next`.
 ```
 
 The names used in the `property` property refer to the names of outputs as defined in the [mimic setup](https://github.com/gezakerecsenyi/flowol/#mimic-definition). The items in the `value` property refer to the value to set the respective (at the same index) `property` to. For example, in the above demo, the "light" output would be set to `true`, while the "heat" output would be set to `6`. You can set as many or as few of the outputs as you wish.
+
+**Decisions:**
+
+```
+{
+  "type": "decision",
+  "test": {
+    "input": "sun"
+  },
+  "question": "equal",
+  "comparison": {
+    "data": 3
+  },
+  "true": [
+    ...
+  ],
+  "false": [
+    ...
+  ]
+}
+```
+
+Possible properties for `test` and/or `comparison` are:
+
+* `input:`, which accepts the name of an input as a value;
+* `var:`, which accepts the name of a global variable as a value;
+* `data:`, which accepts any string, integer, float or boolean as a value
+
+Possible values for `question` are:
+
+* `equal` - `===`
+* `less` - `<`
+* `more` - `>`
+* `lessorequal` - `<=`
+* `moreorequal` - `>=`
+* `notequal` - `!==`
