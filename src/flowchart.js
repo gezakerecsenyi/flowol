@@ -17,6 +17,22 @@ class Flowol {
       }
     }
 
+    function findById(o, id) {
+      if( o.id === id ){
+        return o;
+      }
+      var result, p; 
+      for (p in o) {
+        if(o.hasOwnProperty(p) && typeof o[p] === 'object') {
+          result = findById(o[p], id);
+          if(result){
+            return result;
+          }
+        }
+      }
+      return result;
+    }
+
     Object.keys(outputs).forEach(property=>{
       if (!checkFormat(outputs[property])){
         error("Illegal value type '" + typeof outputs[property] + "' in mimic definition of output '" + property + "'");
@@ -78,8 +94,8 @@ class Flowol {
             //Decisions
             case "decision":
               let base;
-              if (thread.test.input){
-                base = inputs[thread.test.input];
+              if (thread.test["input"]){
+                base = inputs[thread.test["input"]];
               } else if (thread.test["var"]){
                 base = inputs[thread.test["var"]];
               } else if (thread.test["data"]) {
@@ -89,8 +105,8 @@ class Flowol {
               }
 
               let comparison;
-              if (thread.comparison.input){
-                comparison = inputs[thread.comparison.input];
+              if (thread.comparison["input"]){
+                comparison = inputs[thread.comparison["input"]];
               } else if (thread.comparison["var"]){
                 comparison = inputs[thread.comparison["var"]];
               } else if (thread.comparison["data"]) {
@@ -127,6 +143,16 @@ class Flowol {
                 sendOff(thread["false"], 0)
               }
 
+              break;
+            
+            case "goto":
+              let destination = findById(flowchart, thread.destination);
+              
+              if (destination){
+                sendOff([destination], 0);
+              } else {
+                error("no item found with id '" + thread.destination.toString() + "'")
+              }
               break;
           }
         }
