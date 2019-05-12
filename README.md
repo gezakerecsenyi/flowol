@@ -56,6 +56,16 @@ All JSON for the flowchart should be nested inside an item in a base array. This
 
 with all subsequent actions contained in `next`.
 
+To end a thread, simply use:
+
+```
+{
+  "type": "end"
+}
+```
+
+Other possible actions/elements include:
+
 **Delays:**
 
 ```
@@ -96,10 +106,10 @@ The names used in the `property` property refer to the names of outputs as defin
     "data": 3
   },
   "true": [
-    ...
+    ... // What should happen if the statement is true?
   ],
   "false": [
-    ...
+    ... // What should happen if the statement is false?
   ]
 }
 ```
