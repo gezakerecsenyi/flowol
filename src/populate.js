@@ -3,6 +3,7 @@ Flowol.prototype.populate = function(flowolDiv){
 
   let toolbar = document.createElement("div");
   toolbar.setAttribute("class", "toolbar");
+  toolbar.setAttribute("id", "toolbar");
   let workspace = document.createElement("div");
   workspace.setAttribute("class", "workspace");
   workspace.setAttribute("id", "workspace");
@@ -136,7 +137,8 @@ Flowol.prototype.populate = function(flowolDiv){
   calculator.setAttribute("id", "calculator");
   div.appendChild(calculator);
 
-  workspace.onclick = this.clickHandler;
+  workspace.onmousedown = this.clickHandler;
+  workspace.onmouseup = this.stopBad;
 
   div.onmousemove = this.ghostHandler;
 
