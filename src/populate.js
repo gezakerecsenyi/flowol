@@ -138,5 +138,7 @@ Flowol.prototype.populate = function(flowolDiv){
 
   workspace.onclick = this.clickHandler;
 
+  div.onmousemove = this.ghostHandler;
+
   toolbar.style.width = "140px";
 }
