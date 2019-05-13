@@ -22,10 +22,10 @@ Flowol.prototype.buildElem = function(){
   }
 }
 
-function deCheck( groupName ) {
-  var radios = document.getElementsByName( groupName );
-  for( i = 0; i < radios.length; i++ ) {
-    if( radios[i].checked ) {
+function deCheck(groupName) {
+  var radios = document.getElementsByName(groupName);
+  for(i=0; i<radios.length; i++) {
+    if (radios[i].checked) {
       radios[i].checked = false;
     }
   }
