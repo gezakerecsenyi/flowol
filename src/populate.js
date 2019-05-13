@@ -5,6 +5,7 @@ Flowol.prototype.populate = function(flowolDiv){
   toolbar.setAttribute("class", "toolbar");
   let workspace = document.createElement("div");
   workspace.setAttribute("class", "workspace");
+  workspace.setAttribute("id", "workspace");
 
   let elements = document.createElement("form");
   elements.setAttribute("id", "elements");
@@ -14,6 +15,7 @@ Flowol.prototype.populate = function(flowolDiv){
     style.setAttribute("class", "checkmark"); 
     return style;
   }
+
   function radioContainer() { 
     let container = document.createElement("label"); 
     container.setAttribute("class", "container"); 
@@ -128,6 +130,13 @@ Flowol.prototype.populate = function(flowolDiv){
   for(i=0;i<radios.length;i++) {
     radios[i].onclick = this.switchCursor;
   }
+
+  let calculator = document.createElement("div");
+  calculator.setAttribute("class", "calculator");
+  calculator.setAttribute("id", "calculator");
+  div.appendChild(calculator);
+
+  workspace.onclick = this.clickHandler;
 
   toolbar.style.width = "140px";
 }
