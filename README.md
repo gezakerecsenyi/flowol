@@ -1,7 +1,7 @@
 # Flowol
 A clone of Flowol to allow for custom features, such as mimic creation, without the cost.
 
-*(demo available at https://repl.it/@GezaK/Flowol)*
+*(demo available at https://repl.it/@GezaK/Flowol); about 80% of the code is in the `make-ui` branch - so check that out!*
 
 ## Usage instructions
 
