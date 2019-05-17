@@ -1,4 +1,4 @@
-Flowol.prototype.populate = function(flowolDiv){
+Flowol.prototype.populate = function(flowolDiv, mimic){
   let div = flowolDiv;
 
   let toolbar = document.createElement("div");
@@ -23,13 +23,13 @@ Flowol.prototype.populate = function(flowolDiv){
     return container;
   }
 
-  let startContainer = radioContainer("Start/end");
+  let startContainer = radioContainer();
   let start = document.createElement("input");
-  let outputContainer = radioContainer("Output");
+  let outputContainer = radioContainer();
   let output = document.createElement("input");
-  let delayContainer = radioContainer("Delay");
+  let delayContainer = radioContainer();
   let delay = document.createElement("input");
-  let decisionContainer = radioContainer("Decision");
+  let decisionContainer = radioContainer();
   let decision = document.createElement("input");
 
   let separator = document.createElement("hr");
@@ -137,7 +137,11 @@ Flowol.prototype.populate = function(flowolDiv){
   calculator.setAttribute("id", "calculator");
   div.appendChild(calculator);
 
-  workspace.onmousedown = this.clickHandler;
+  let clickHandler = this.clickHandler;
+
+  workspace.onmousedown = function(e){
+    clickHandler(e, mimic)
+  }
   workspace.onmouseup = this.stopBad;
 
   div.onmousemove = this.ghostHandler;
