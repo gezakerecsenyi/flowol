@@ -1,5 +1,16 @@
 let selected, cursor, shapes = [], modals = [], ghost;
 
+function closeModals(){
+  while (modals[0]){
+    modals[0].parentNode.removeChild(modals[0]);
+    modals.splice(0, 1);
+  }
+
+  shapes.forEach(shape=>{
+    shape.element.classList.remove("editing");
+  });
+}
+
 var AABB = {
   collide: function (el1, el2) {
     var rect1 = el1.getBoundingClientRect();
@@ -48,6 +59,8 @@ Flowol.prototype.buildElem = function(){
     ghost.setAttribute("class", "ghost decision-ghost");
   }
 
+  closeModals();
+
   if (cursor === 0){
     workspace.appendChild(ghost);
   }
@@ -72,6 +85,17 @@ Flowol.prototype.switchCursor = function(){
   } else {
     cursor = 1;
   }
+}
+
+function randomId(){
+  const chars = "qwertyuiopasdfghjkllzxcvbnm[];'#,./<>?:@~{}+_)(*&^%$£\"'1234567890!";
+
+  let str = "";
+  for (i=0;i<10;i++){
+    str += chars[Math.floor(Math.random()*chars.length)];
+  }
+
+  return str;
 }
 
 function mousePos(e, what){
@@ -123,15 +147,10 @@ Flowol.prototype.stopBad = function(){
   if (ghost) ghost.classList.remove("stop");
 }
 
-Flowol.prototype.clickHandler = function(e){
+Flowol.prototype.clickHandler = function(e, mimic){
   let workspace = document.getElementById("workspace");
 
-  function closeModals(){
-    while (modals[0]){
-      modals[0].parentNode.removeChild(modals[0]);
-      modals.splice(0, 1);
-    }
-  }
+  closeModals()
 
   function setShape(base, key, value){
     shapes.forEach(shape=>{
@@ -152,78 +171,290 @@ Flowol.prototype.clickHandler = function(e){
       switch (selected){
         case 0:
           thisShape.setAttribute("class", "shape start-shape");
+          setShape(thisShape, "type", "start");
           thisShape.onclick = function(){
-            this.classList.add("editing");
-            let modal = document.createElement("dialog");
-            modal.setAttribute("open", "open")
-            let title = document.createElement("h3");
-            title.innerText = "Edit Start symbol";
-            let cancel = document.createElement("button");
-            cancel.innerText = "Cancel";
-            cancel.setAttribute("class", "cancel");
-            cancel.onclick = function(){
-              closeModals();
-            }
-            let start = document.createElement("button");
-            start.innerText = "Start";
-            start.setAttribute("class", "option-btn");
-            start.onclick = function(){
-              thisShape.innerHTML = "Start";
-              setShape(thisShape, "type", "start");
-              setShape(thisShape, "on", "start");
-              closeModals();
-            }
-            let stop = document.createElement("button");
-            stop.innerText = "Stop";
-            stop.setAttribute("class", "option-btn");
-            stop.onclick = function(){
-              thisShape.innerHTML = "Stop";
-              setShape(thisShape, "type", "end");
-              closeModals();
-            }
-            let sub = document.createElement("button");
-            sub.innerText = "Sub";
-            sub.setAttribute("class", "option-btn");
-            sub.onclick = function(){
-              document.getElementById("sub-input").style.display = "block";
-              document.getElementById("sub-ok").style.display = "block";
-            }
-            let subName = document.createElement("input");
-            subName.type = "text";
-            subName.placeholder = "Subroutine name...";
-            subName.setAttribute("class", "input");
-            subName.setAttribute("id", "sub-input");
-            subName.style.display = "none";
-            let okBtn = document.createElement("button");
-            okBtn.innerText = "OK";
-            okBtn.setAttribute("class", "option-btn");
-            okBtn.setAttribute("id", "sub-ok");
-            okBtn.style.display = "none";
-            okBtn.onclick = function(){
-              thisShape.innerHTML = "Sub " + subName.value;
-              setShape(thisShape, "type", "start");
-              setShape(thisShape, "on", subName.value);
-              closeModals();
-            }
+            if (!document.getElementById("ghost")){
+              this.classList.add("editing");
+              let modal = document.createElement("dialog");
+              modal.setAttribute("open", "open");
+              let title = document.createElement("h3");
+              title.innerText = "Edit Start symbol";
+              let cancel = document.createElement("button");
+              cancel.innerText = "Cancel";
+              cancel.setAttribute("class", "cancel");
+              cancel.onclick = function(){
+                closeModals();
+              }
+              let start = document.createElement("button");
+              start.innerText = "Start";
+              start.setAttribute("class", "option-btn");
+              start.onclick = function(){
+                thisShape.innerHTML = "Start";
+                setShape(thisShape, "type", "start");
+                setShape(thisShape, "on", "start");
+                closeModals();
+              }
+              let stop = document.createElement("button");
+              stop.innerText = "Stop";
+              stop.setAttribute("class", "option-btn");
+              stop.onclick = function(){
+                thisShape.innerHTML = "Stop";
+                setShape(thisShape, "type", "end");
+                closeModals();
+              }
+              let sub = document.createElement("button");
+              sub.innerText = "Sub";
+              sub.setAttribute("class", "option-btn");
+              sub.setAttribute("id", "sub-btn");           
+              sub.onclick = function(){
+                document.getElementById("sub-input").style.display = "block";
+                document.getElementById("sub-ok").style.display = "block";
+              }
+              let subName = document.createElement("input");
+              subName.type = "text";
+              subName.placeholder = "Subroutine name...";
+              subName.setAttribute("class", "input");
+              subName.setAttribute("id", "sub-input");
+              subName.style.display = "none";
+              let okBtn = document.createElement("button");
+              okBtn.innerText = "OK";
+              okBtn.setAttribute("class", "option-btn");
+              okBtn.setAttribute("id", "sub-ok");
+              okBtn.style.display = "none";
+              okBtn.setAttribute("disabled", "true");  
+              okBtn.onclick = function(){
+                thisShape.innerHTML = "Sub " + subName.value;
+                setShape(thisShape, "type", "start");
+                setShape(thisShape, "on", subName.value);
+                closeModals();
+              }
+              subName.onchange = function(){
+                if (document.getElementById("sub-input").value != "" && document.getElementById("sub-input").value !== "start"){
+                  document.getElementById("sub-ok").disabled = false;
+                } else {
+                  document.getElementById("sub-ok").disabled = true;
+                }
+              }
 
-            modal.appendChild(title);
-            modal.appendChild(cancel);
-            modal.appendChild(start);
-            modal.appendChild(stop);
-            modal.appendChild(sub);
-            modal.appendChild(subName);
-            modal.appendChild(okBtn);
+              modal.appendChild(title);
+              modal.appendChild(cancel);
+              modal.appendChild(start);
+              modal.appendChild(stop);
+              modal.appendChild(sub);
+              modal.appendChild(subName);
+              modal.appendChild(okBtn);
 
-            modals.push(modal);
+              modals.push(modal);
 
-            document.body.appendChild(modal);
+              document.body.appendChild(modal);
+            }
           }
           break;
         case 1:
           thisShape.setAttribute("class", "shape output-shape");
+          thisShape.onclick = function(){
+            if (!document.getElementById("ghost")){
+              this.classList.add("editing");
+              setShape(thisShape, "type", "output");
+
+              let modal = document.createElement("dialog");
+
+              let what = [];
+              let changes = [];
+
+              modal.setAttribute("open", "open");
+              let title = document.createElement("h3");
+              title.innerText = "Edit Delay";
+
+              let cancel = document.createElement("button");
+              cancel.innerText = "Cancel";
+              cancel.setAttribute("class", "cancel");
+              cancel.onclick = function(){
+                closeModals();
+              }
+
+              let okBtn = document.createElement("button");
+              okBtn.innerText = "OK";
+              okBtn.setAttribute("class", "open-btn");
+              okBtn.onclick = function(){
+                setShape(thisShape, "property", what);
+                setShape(thisShape, "value", changes);
+                console.log(shapes);
+                closeModals();
+              }
+            
+              let table = document.createElement("table");
+              Object.keys(mimic.outputs).forEach(output => {
+                let row = document.createElement("tr");
+
+                let name = document.createElement("td");
+                name.innerText = output;
+
+                let choice = document.createElement("td");
+                let value = document.createElement("td");
+                
+                let boolean = document.createElement("input");
+                boolean.type = "radio";
+
+                boolean.setAttribute("id", output + "boolean");
+                let bLabel = document.createElement("label");
+                bLabel.setAttribute("for", output + "boolean");
+                bLabel.innerText = "Boolean";
+
+                boolean.name = output + "type";
+                boolean.onclick = function(){
+                  value.innerHTML = "";
+                  
+                  let select = document.createElement("select");
+
+                  let yes = document.createElement("option");
+                  yes.innerText = "On";
+                  yes.onclick = function(){
+                    if (what.indexOf(output) > -1){
+                      changes[what.indexOf(output)] = true;
+                    } else {
+                      what.push(output);
+                      changes.push(true);
+                    }
+                  }
+
+                  let no = document.createElement("option");
+                  no.innerText = "Off";
+                  no.onclick = function(){
+                    if (what.indexOf(output) > -1){
+                      changes[what.indexOf(output)] = false;
+                    } else {
+                      what.push(output);
+                      changes.push(false);
+                    }
+                  }
+
+                  select.appendChild(yes);
+                  select.appendChild(no);
+
+                  value.appendChild(select);
+                }
+
+                let number = document.createElement("input");
+                number.type = "radio";
+                
+                boolean.setAttribute("id", output + "num");
+                let nLabel = document.createElement("label");
+                nLabel.setAttribute("for", output + "num");
+                nLabel.innerText = "Number";
+
+                number.name = output + "type";
+                number.onclick = function(){
+                  value.innerHTML = "";
+
+                  let inp = document.createElement("input");
+                  inp.type = "number";
+                  inp.onchange = function(){
+                    if (inp.valueAsNumber !== NaN){
+                      if (what.indexOf(output) > -1){
+                        changes[what.indexOf(output)] = inp.valueAsNumber;
+                      } else {
+                        what.push(output);
+                        changes.push(inp.valueAsNumber);
+                      }
+                    } else {
+                      if (what.indexOf(output) > -1){
+                        changes.splice(what.indexOf(output), 1);
+                        what.splice(what.indexOf(output), 1);
+                      }
+                    }
+                  }
+
+                  value.appendChild(inp);
+                }
+
+                choice.appendChild(boolean);
+                choice.appendChild(bLabel);
+                choice.appendChild(number);
+                choice.appendChild(nLabel);
+
+                let cancelRow = document.createElement("td");
+
+                let cancelButton = document.createElement("span");
+                cancelButton.setAttribute("class", "inline-cancel");
+                cancelButton.innerHTML = '<i class="far fa-window-close"></i>';
+                cancelButton.onclick = function(){
+                  boolean.checked = false;
+                  number.checked = false;
+                  value.innerHTML = "";
+                  if (what.indexOf(output) > -1){
+                    changes.splice(what.indexOf(output), 1);
+                    what.splice(what.indexOf(output), 1);
+                  }
+                }
+                cancelRow.appendChild(cancelButton);
+
+                row.appendChild(name);
+                row.appendChild(choice);
+                row.appendChild(value);
+                row.appendChild(cancelRow);
+
+                table.appendChild(row);
+              });
+
+              modal.appendChild(cancel);
+              modal.appendChild(okBtn);
+              modal.appendChild(table);
+
+              modals.push(modal);
+
+              document.body.appendChild(modal);
+            }
+          }
           break;
         case 2:
           thisShape.setAttribute("class", "shape delay-shape");
+          thisShape.onclick = function(){
+            if (!document.getElementById("ghost")){
+              this.classList.add("editing");
+
+              let modal = document.createElement("dialog");
+
+              modal.setAttribute("open", "open");
+              let title = document.createElement("h3");
+              title.innerText = "Edit Delay";
+              let cancel = document.createElement("button");
+              cancel.innerText = "Cancel";
+              cancel.setAttribute("class", "cancel");
+              cancel.onclick = function(){
+                closeModals();
+              }
+
+              let duration = document.createElement("input");
+              duration.setAttribute("class", "input")
+              duration.type = "number";
+              duration.onchange = function(){
+                if (duration.valueAsNumber > 0){
+                  okBtn.disabled = false;
+                } else {
+                  okBtn.disabled = true;
+                }
+              }
+
+              let okBtn = document.createElement("button");
+              okBtn.innerText = "OK";
+              okBtn.disabled = true;
+              okBtn.onclick = function(){
+                thisShape.innerHTML = "Delay " + duration.value + "s";
+                setShape(thisShape, "type", "delay");
+                setShape(thisShape, "duration", okBtn.valueAsNumber * 1000);
+                closeModals();
+              }
+
+              modal.appendChild(title);
+              modal.appendChild(duration);
+              modal.appendChild(okBtn);
+
+              modals.push(modal);
+
+              document.body.appendChild(modal);
+            }  
+          }
           break;
         case 3:
           thisShape.setAttribute("class", "shape decision-shape");
@@ -235,15 +466,18 @@ Flowol.prototype.clickHandler = function(e){
       workspace.appendChild(thisShape);
 
       shapes.push({
-        type: selected,
+        blockType: selected,
         top: mousePos(e, "#calculator").y,
         left: mousePos(e, "#calculator").x,
-        element: thisShape
+        element: thisShape,
+        id: randomId()
       });
 
       selected = undefined;
       ghost.parentNode.removeChild(ghost);
       deCheck("element");
+
+      thisShape.click();
     } else {
       ghost.classList.add("stop");
     }
