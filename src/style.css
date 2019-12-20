@@ -190,6 +190,11 @@ body {
     transform: skew(-30deg, 0deg);
 }
 
+.shape.output-shape li {
+    transform: skew(30deg, 0deg);
+    list-style-type: none;
+}
+
 .shape.delay-shape, .ghost.delay-ghost {
     width: 110px;
     height: 60px;

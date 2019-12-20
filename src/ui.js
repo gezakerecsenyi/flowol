@@ -11,8 +11,8 @@ function closeModals() {
     });
 }
 
-function getShape(element){
-    for (let i=0;i<shapes.length;i++){
+function getShape(element) {
+    for (let i = 0; i < shapes.length; i++) {
         if (shapes[i].element === element) return shapes[i];
     }
 
@@ -157,6 +157,31 @@ Flowol.prototype.stopBad = function () {
     if (ghost) ghost.classList.remove("stop");
 };
 
+function advancedIndex(what, test) {
+    let index = -1;
+
+    for (let i = 0; i < what.length; i++) {
+        if (typeof what[i] === "object" && typeof test === "object"){
+            let keys = Object.keys(what[i]);
+            let testKeys = Object.keys(test);
+
+            keys.forEach(e => {
+                if (testKeys.includes(e) && what[i][e] === test[e]) testKeys.splice(testKeys.indexOf(e));
+            });
+
+            if (!testKeys.length) {
+                index = i;
+                break;
+            }
+        } else if (what[i] === test) {
+            index = i;
+            break;
+        }
+    }
+
+    return index
+}
+
 Flowol.prototype.clickHandler = function (e, mimic) {
     let workspace = document.getElementById("workspace");
 
@@ -286,6 +311,18 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                             okBtn.innerText = "OK";
                             okBtn.setAttribute("class", "open-btn");
                             okBtn.onclick = function () {
+                                thisShape.innerHTML = "";
+                                what.forEach((e, i) => {
+                                    if (typeof changes[i] === "object")
+                                        thisShape.innerHTML += `, ${e}: <i>${changes[i]['var']}</i>`;
+                                    else
+                                        thisShape.innerHTML += `, ${e}: ${changes[i].toString()}`;
+                                });
+
+                                thisShape.innerHTML = thisShape.innerHTML.replace(/(^ *, *)|( *, *$)/g, "");
+
+                                thisShape.innerHTML = `<li>${thisShape.innerHTML}</li>`;
+
                                 setShape(thisShape, "property", what);
                                 setShape(thisShape, "value", changes);
                                 console.log(shapes);
@@ -328,7 +365,7 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                                     let no = document.createElement("option");
                                     no.innerText = "Off";
 
-                                    select.onchange = function() {
+                                    select.onchange = function () {
                                         let newVal = select.value !== "Off";
 
                                         if (what.indexOf(output) > -1) {
@@ -374,7 +411,7 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                                         select.appendChild(opt);
                                     });
 
-                                    select.onchange = function() {
+                                    select.onchange = function () {
                                         let newVal = {
                                             "var": select.value || Object.keys(mimic.vars)[0]
                                         };
@@ -435,16 +472,7 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                                 let cancelButton = document.createElement("span");
                                 cancelButton.setAttribute("class", "inline-cancel");
                                 cancelButton.innerHTML = '<i class="far fa-window-close"></i>';
-                                cancelButton.onclick = function () {
-                                    boolean.checked = false;
-                                    number.checked = false;
-                                    variable.checked = false;
-                                    value.innerHTML = "";
-                                    if (what.indexOf(output) > -1) {
-                                        changes.splice(what.indexOf(output), 1);
-                                        what.splice(what.indexOf(output), 1);
-                                    }
-                                };
+
                                 cancelRow.appendChild(cancelButton);
 
                                 row.appendChild(name);
@@ -462,18 +490,35 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                                         boolean.onclick(null);
 
                                         input.value = value ? "On" : "Off";
+                                        input.onchange();
                                     } else if (typeof value === "number") {
                                         number.checked = true;
                                         number.onclick(null);
 
                                         input.valueAsNumber = value;
+                                        input.onchange();
                                     } else if (typeof value === "object") {
                                         variable.checked = true;
                                         variable.onclick(null);
 
                                         input.value = value["var"];
+                                        input.onchange();
                                     }
                                 }
+
+                                cancelButton.onclick = function () {
+                                    boolean.checked = false;
+                                    number.checked = false;
+                                    variable.checked = false;
+                                    value.innerHTML = "";
+
+                                    const index = advancedIndex(what, output);
+
+                                    if (index > -1) {
+                                        changes.splice(index, 1);
+                                        what.splice(index, 1);
+                                    }
+                                };
                             });
 
                             modal.appendChild(cancel);
@@ -533,6 +578,30 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                     break;
                 case 3:
                     thisShape.setAttribute("class", "shape decision-shape");
+
+                    thisShape.onclick = function () {
+                        if (!document.getElementById("ghost")) {
+                            this.classList.add("editing");
+
+                            let modal = document.createElement("dialog");
+
+                            modal.setAttribute("open", "open");
+                            let title = document.createElement("h3");
+                            title.innerText = "Edit decision";
+                            let cancel = document.createElement("button");
+                            cancel.innerText = "Cancel";
+                            cancel.setAttribute("class", "cancel");
+                            cancel.onclick = function () {
+                                closeModals();
+                            };
+
+                            modal.appendChild(title);
+
+                            modals.push(modal);
+
+                            document.body.appendChild(modal);
+                        }
+                    };
                     break;
             }
 
