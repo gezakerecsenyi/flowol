@@ -209,78 +209,80 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                     setShape(thisShape, "type", "start");
                     thisShape.onclick = function () {
                         if (!document.getElementById("ghost")) {
-                            this.classList.add("editing");
-                            let modal = document.createElement("dialog");
-                            modal.setAttribute("open", "open");
-                            let title = document.createElement("h3");
-                            title.innerText = "Edit Start symbol";
-                            let cancel = document.createElement("button");
-                            cancel.innerText = "Cancel";
-                            cancel.setAttribute("class", "cancel");
-                            cancel.onclick = function () {
-                                closeModals();
-                            };
-                            let start = document.createElement("button");
-                            start.innerText = "Start";
-                            start.setAttribute("class", "option-btn");
-                            start.onclick = function () {
-                                thisShape.innerHTML = "Start";
-                                setShape(thisShape, "type", "start");
-                                setShape(thisShape, "on", "start");
-                                closeModals();
-                            };
-                            let stop = document.createElement("button");
-                            stop.innerText = "Stop";
-                            stop.setAttribute("class", "option-btn");
-                            stop.onclick = function () {
-                                thisShape.innerHTML = "Stop";
-                                setShape(thisShape, "type", "end");
-                                closeModals();
-                            };
-                            let sub = document.createElement("button");
-                            sub.innerText = "Sub";
-                            sub.setAttribute("class", "option-btn");
-                            sub.setAttribute("id", "sub-btn");
-                            sub.onclick = function () {
-                                document.getElementById("sub-input").style.display = "block";
-                                document.getElementById("sub-ok").style.display = "block";
-                            };
-                            let subName = document.createElement("input");
-                            subName.type = "text";
-                            subName.placeholder = "Subroutine name...";
-                            subName.setAttribute("class", "input");
-                            subName.setAttribute("id", "sub-input");
-                            subName.setAttribute("maxlength", "12");
-                            subName.style.display = "none";
-                            let okBtn = document.createElement("button");
-                            okBtn.innerText = "OK";
-                            okBtn.setAttribute("class", "option-btn");
-                            okBtn.setAttribute("id", "sub-ok");
-                            okBtn.style.display = "none";
-                            okBtn.setAttribute("disabled", "true");
-                            okBtn.onclick = function () {
-                                thisShape.innerHTML = "Sub " + subName.value;
-                                thisShape.style.fontSize = "";
-                                setShape(thisShape, "type", "start");
-                                setShape(thisShape, "on", subName.value);
-                                closeModals();
-                            };
-                            subName.oninput = function () {
-                                document.getElementById("sub-ok").disabled = !(document.getElementById("sub-input").value.trim() !== ""
-                                    && document.getElementById("sub-input").value !== "start");
-                            };
+                            if (!cursor) {
+                                this.classList.add("editing");
+                                let modal = document.createElement("dialog");
+                                modal.setAttribute("open", "open");
+                                let title = document.createElement("h3");
+                                title.innerText = "Edit Start symbol";
+                                let cancel = document.createElement("button");
+                                cancel.innerText = "Cancel";
+                                cancel.setAttribute("class", "cancel");
+                                cancel.onclick = function () {
+                                    closeModals();
+                                };
+                                let start = document.createElement("button");
+                                start.innerText = "Start";
+                                start.setAttribute("class", "option-btn");
+                                start.onclick = function () {
+                                    thisShape.innerHTML = "Start";
+                                    setShape(thisShape, "type", "start");
+                                    setShape(thisShape, "on", "start");
+                                    closeModals();
+                                };
+                                let stop = document.createElement("button");
+                                stop.innerText = "Stop";
+                                stop.setAttribute("class", "option-btn");
+                                stop.onclick = function () {
+                                    thisShape.innerHTML = "Stop";
+                                    setShape(thisShape, "type", "end");
+                                    closeModals();
+                                };
+                                let sub = document.createElement("button");
+                                sub.innerText = "Sub";
+                                sub.setAttribute("class", "option-btn");
+                                sub.setAttribute("id", "sub-btn");
+                                sub.onclick = function () {
+                                    document.getElementById("sub-input").style.display = "block";
+                                    document.getElementById("sub-ok").style.display = "block";
+                                };
+                                let subName = document.createElement("input");
+                                subName.type = "text";
+                                subName.placeholder = "Subroutine name...";
+                                subName.setAttribute("class", "input");
+                                subName.setAttribute("id", "sub-input");
+                                subName.setAttribute("maxlength", "12");
+                                subName.style.display = "none";
+                                let okBtn = document.createElement("button");
+                                okBtn.innerText = "OK";
+                                okBtn.setAttribute("class", "option-btn");
+                                okBtn.setAttribute("id", "sub-ok");
+                                okBtn.style.display = "none";
+                                okBtn.setAttribute("disabled", "true");
+                                okBtn.onclick = function () {
+                                    thisShape.innerHTML = "Sub " + subName.value;
+                                    thisShape.style.fontSize = "";
+                                    setShape(thisShape, "type", "start");
+                                    setShape(thisShape, "on", subName.value);
+                                    closeModals();
+                                };
+                                subName.oninput = function () {
+                                    document.getElementById("sub-ok").disabled = !(document.getElementById("sub-input").value.trim() !== ""
+                                        && document.getElementById("sub-input").value !== "start");
+                                };
 
-                            modal.appendChild(title);
-                            modal.appendChild(cancel);
-                            modal.appendChild(start);
-                            modal.appendChild(stop);
-                            modal.appendChild(sub);
-                            modal.appendChild(subName);
-                            modal.appendChild(okBtn);
+                                modal.appendChild(title);
+                                modal.appendChild(cancel);
+                                modal.appendChild(start);
+                                modal.appendChild(stop);
+                                modal.appendChild(sub);
+                                modal.appendChild(subName);
+                                modal.appendChild(okBtn);
 
-                            modals.push(modal);
+                                modals.push(modal);
 
-                            document.body.appendChild(modal);
+                                document.body.appendChild(modal);
+                            }
                         }
                     };
                     break;
@@ -288,246 +290,248 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                     thisShape.setAttribute("class", "shape output-shape");
                     thisShape.onclick = function () {
                         if (!document.getElementById("ghost")) {
-                            this.classList.add("editing");
-                            setShape(thisShape, "type", "output");
+                            if (!cursor) {
+                                this.classList.add("editing");
+                                setShape(thisShape, "type", "output");
 
-                            let modal = document.createElement("dialog");
+                                let modal = document.createElement("dialog");
 
-                            let what = [];
-                            let changes = [];
+                                let what = [];
+                                let changes = [];
 
-                            modal.setAttribute("open", "open");
-                            let title = document.createElement("h3");
-                            title.innerText = "Edit Delay";
+                                modal.setAttribute("open", "open");
+                                let title = document.createElement("h3");
+                                title.innerText = "Edit Delay";
 
-                            let cancel = document.createElement("button");
-                            cancel.innerText = "Cancel";
-                            cancel.setAttribute("class", "cancel");
-                            cancel.onclick = function () {
-                                closeModals();
-                            };
-
-                            let okBtn = document.createElement("button");
-                            okBtn.innerText = "OK";
-                            okBtn.setAttribute("class", "open-btn");
-                            okBtn.onclick = function () {
-                                thisShape.innerHTML = "";
-                                what.forEach((e, i) => {
-                                    if (typeof changes[i] === "object")
-                                        thisShape.innerHTML += `, ${e}: <i>${changes[i]['var']}</i>`;
-                                    else
-                                        thisShape.innerHTML += `, ${e}: ${changes[i].toString()}`;
-                                });
-
-                                thisShape.innerHTML = thisShape.innerHTML.replace(/(^ *, *)|( *, *$)/g, "");
-
-                                thisShape.innerHTML = `<li>${thisShape.innerHTML}</li>`;
-
-                                setShape(thisShape, "property", what);
-                                setShape(thisShape, "value", changes);
-                                console.log(shapes);
-                                closeModals();
-                            };
-
-                            const previousProps = getShape(thisShape).property || [];
-                            const previousVals = getShape(thisShape).value || [];
-
-                            let table = document.createElement("table");
-                            Object.keys(mimic.outputs).forEach(output => {
-                                let row = document.createElement("tr");
-
-                                let input = {};
-
-                                let name = document.createElement("td");
-                                name.innerText = output;
-
-                                let choice = document.createElement("td");
-                                let value = document.createElement("td");
-
-                                let boolean = document.createElement("input");
-                                boolean.type = "radio";
-
-                                boolean.setAttribute("id", output + "boolean");
-                                let bLabel = document.createElement("label");
-                                bLabel.setAttribute("for", output + "boolean");
-                                bLabel.innerText = "Boolean";
-
-                                boolean.name = output + "type";
-                                boolean.onclick = function () {
-                                    value.innerHTML = "";
-
-                                    let select = document.createElement("select");
-                                    input = select;
-
-                                    let yes = document.createElement("option");
-                                    yes.innerText = "On";
-
-                                    let no = document.createElement("option");
-                                    no.innerText = "Off";
-
-                                    select.onchange = function () {
-                                        let newVal = select.value !== "Off";
-
-                                        if (what.indexOf(output) > -1) {
-                                            changes[what.indexOf(output)] = newVal;
-                                        } else {
-                                            what.push(output);
-                                            changes.push(newVal);
-                                        }
-                                    };
-
-                                    select.onchange(null);
-
-                                    select.appendChild(yes);
-                                    select.appendChild(no);
-
-                                    value.appendChild(select);
+                                let cancel = document.createElement("button");
+                                cancel.innerText = "Cancel";
+                                cancel.setAttribute("class", "cancel");
+                                cancel.onclick = function () {
+                                    closeModals();
                                 };
 
-                                boolean.setAttribute("id", output + "boolean");
-                                let nLabel = document.createElement("label");
-                                nLabel.setAttribute("for", output + "num");
-                                nLabel.innerText = "Number";
-
-                                let variable = document.createElement("input");
-                                variable.type = "radio";
-                                variable.setAttribute("id", output + "var");
-                                variable.setAttribute("name", output + "type");
-
-                                let vLabel = document.createElement("label");
-                                vLabel.setAttribute("for", output + "var");
-                                vLabel.innerText = "Variable";
-
-                                variable.onclick = function () {
-                                    value.innerHTML = "";
-
-                                    let select = document.createElement("select");
-                                    input = select;
-
-                                    Object.keys(mimic.vars).forEach(mimicVar => {
-                                        let opt = document.createElement("option");
-                                        opt.innerText = mimicVar;
-
-                                        select.appendChild(opt);
+                                let okBtn = document.createElement("button");
+                                okBtn.innerText = "OK";
+                                okBtn.setAttribute("class", "open-btn");
+                                okBtn.onclick = function () {
+                                    thisShape.innerHTML = "";
+                                    what.forEach((e, i) => {
+                                        if (typeof changes[i] === "object")
+                                            thisShape.innerHTML += `, ${e}: <i>${changes[i]['var']}</i>`;
+                                        else
+                                            thisShape.innerHTML += `, ${e}: ${changes[i].toString()}`;
                                     });
 
-                                    select.onchange = function () {
-                                        let newVal = {
-                                            "var": select.value || Object.keys(mimic.vars)[0]
-                                        };
+                                    thisShape.innerHTML = thisShape.innerHTML.replace(/(^ *, *)|( *, *$)/g, "");
 
-                                        if (what.indexOf(output) > -1) {
-                                            changes[what.indexOf(output)] = newVal;
-                                        } else {
-                                            what.push(output);
-                                            changes.push(newVal);
-                                        }
-                                    };
+                                    thisShape.innerHTML = `<li>${thisShape.innerHTML}</li>`;
 
-                                    select.onchange(null);
-
-                                    value.appendChild(select);
+                                    setShape(thisShape, "property", what);
+                                    setShape(thisShape, "value", changes);
+                                    console.log(shapes);
+                                    closeModals();
                                 };
 
-                                let number = document.createElement("input");
-                                number.type = "radio";
+                                const previousProps = getShape(thisShape).property || [];
+                                const previousVals = getShape(thisShape).value || [];
 
-                                number.name = output + "type";
-                                number.setAttribute("id", output + "num");
-                                number.onclick = function () {
-                                    value.innerHTML = "";
+                                let table = document.createElement("table");
+                                Object.keys(mimic.outputs).forEach(output => {
+                                    let row = document.createElement("tr");
 
-                                    let inp = document.createElement("input");
-                                    input = inp;
+                                    let input = {};
 
-                                    inp.type = "number";
-                                    inp.onchange = function () {
-                                        if (!isNaN(inp.valueAsNumber)) {
+                                    let name = document.createElement("td");
+                                    name.innerText = output;
+
+                                    let choice = document.createElement("td");
+                                    let value = document.createElement("td");
+
+                                    let boolean = document.createElement("input");
+                                    boolean.type = "radio";
+
+                                    boolean.setAttribute("id", output + "boolean");
+                                    let bLabel = document.createElement("label");
+                                    bLabel.setAttribute("for", output + "boolean");
+                                    bLabel.innerText = "Boolean";
+
+                                    boolean.name = output + "type";
+                                    boolean.onclick = function () {
+                                        value.innerHTML = "";
+
+                                        let select = document.createElement("select");
+                                        input = select;
+
+                                        let yes = document.createElement("option");
+                                        yes.innerText = "On";
+
+                                        let no = document.createElement("option");
+                                        no.innerText = "Off";
+
+                                        select.onchange = function () {
+                                            let newVal = select.value !== "Off";
+
                                             if (what.indexOf(output) > -1) {
-                                                changes[what.indexOf(output)] = inp.valueAsNumber;
+                                                changes[what.indexOf(output)] = newVal;
                                             } else {
                                                 what.push(output);
-                                                changes.push(inp.valueAsNumber);
+                                                changes.push(newVal);
                                             }
-                                        } else {
-                                            if (what.indexOf(output) > -1) {
-                                                changes.splice(what.indexOf(output), 1);
-                                                what.splice(what.indexOf(output), 1);
-                                            }
-                                        }
+                                        };
+
+                                        select.onchange(null);
+
+                                        select.appendChild(yes);
+                                        select.appendChild(no);
+
+                                        value.appendChild(select);
                                     };
 
-                                    value.appendChild(inp);
-                                };
+                                    boolean.setAttribute("id", output + "boolean");
+                                    let nLabel = document.createElement("label");
+                                    nLabel.setAttribute("for", output + "num");
+                                    nLabel.innerText = "Number";
 
-                                choice.appendChild(boolean);
-                                choice.appendChild(bLabel);
-                                choice.appendChild(number);
-                                choice.appendChild(nLabel);
-                                choice.appendChild(variable);
-                                choice.appendChild(vLabel);
+                                    let variable = document.createElement("input");
+                                    variable.type = "radio";
+                                    variable.setAttribute("id", output + "var");
+                                    variable.setAttribute("name", output + "type");
 
-                                let cancelRow = document.createElement("td");
+                                    let vLabel = document.createElement("label");
+                                    vLabel.setAttribute("for", output + "var");
+                                    vLabel.innerText = "Variable";
 
-                                let cancelButton = document.createElement("span");
-                                cancelButton.setAttribute("class", "inline-cancel");
-                                cancelButton.innerHTML = '<i class="far fa-window-close"></i>';
+                                    variable.onclick = function () {
+                                        value.innerHTML = "";
 
-                                cancelRow.appendChild(cancelButton);
+                                        let select = document.createElement("select");
+                                        input = select;
 
-                                row.appendChild(name);
-                                row.appendChild(choice);
-                                row.appendChild(value);
-                                row.appendChild(cancelRow);
+                                        Object.keys(mimic.vars).forEach(mimicVar => {
+                                            let opt = document.createElement("option");
+                                            opt.innerText = mimicVar;
 
-                                table.appendChild(row);
+                                            select.appendChild(opt);
+                                        });
 
-                                if (previousProps.includes(output)) {
-                                    let value = previousVals[previousProps.indexOf(output)];
+                                        select.onchange = function () {
+                                            let newVal = {
+                                                "var": select.value || Object.keys(mimic.vars)[0]
+                                            };
 
-                                    if (typeof value === "boolean") {
-                                        boolean.checked = true;
-                                        boolean.onclick(null);
+                                            if (what.indexOf(output) > -1) {
+                                                changes[what.indexOf(output)] = newVal;
+                                            } else {
+                                                what.push(output);
+                                                changes.push(newVal);
+                                            }
+                                        };
 
-                                        input.value = value ? "On" : "Off";
-                                        input.onchange();
-                                    } else if (typeof value === "number") {
-                                        number.checked = true;
-                                        number.onclick(null);
+                                        select.onchange(null);
 
-                                        input.valueAsNumber = value;
-                                        input.onchange();
-                                    } else if (typeof value === "object") {
-                                        variable.checked = true;
-                                        variable.onclick(null);
+                                        value.appendChild(select);
+                                    };
 
-                                        input.value = value["var"];
-                                        input.onchange();
+                                    let number = document.createElement("input");
+                                    number.type = "radio";
+
+                                    number.name = output + "type";
+                                    number.setAttribute("id", output + "num");
+                                    number.onclick = function () {
+                                        value.innerHTML = "";
+
+                                        let inp = document.createElement("input");
+                                        input = inp;
+
+                                        inp.type = "number";
+                                        inp.onchange = function () {
+                                            if (!isNaN(inp.valueAsNumber)) {
+                                                if (what.indexOf(output) > -1) {
+                                                    changes[what.indexOf(output)] = inp.valueAsNumber;
+                                                } else {
+                                                    what.push(output);
+                                                    changes.push(inp.valueAsNumber);
+                                                }
+                                            } else {
+                                                if (what.indexOf(output) > -1) {
+                                                    changes.splice(what.indexOf(output), 1);
+                                                    what.splice(what.indexOf(output), 1);
+                                                }
+                                            }
+                                        };
+
+                                        value.appendChild(inp);
+                                    };
+
+                                    choice.appendChild(boolean);
+                                    choice.appendChild(bLabel);
+                                    choice.appendChild(number);
+                                    choice.appendChild(nLabel);
+                                    choice.appendChild(variable);
+                                    choice.appendChild(vLabel);
+
+                                    let cancelRow = document.createElement("td");
+
+                                    let cancelButton = document.createElement("span");
+                                    cancelButton.setAttribute("class", "inline-cancel");
+                                    cancelButton.innerHTML = '<i class="far fa-window-close"></i>';
+
+                                    cancelRow.appendChild(cancelButton);
+
+                                    row.appendChild(name);
+                                    row.appendChild(choice);
+                                    row.appendChild(value);
+                                    row.appendChild(cancelRow);
+
+                                    table.appendChild(row);
+
+                                    if (previousProps.includes(output)) {
+                                        let value = previousVals[previousProps.indexOf(output)];
+
+                                        if (typeof value === "boolean") {
+                                            boolean.checked = true;
+                                            boolean.onclick(null);
+
+                                            input.value = value ? "On" : "Off";
+                                            input.onchange();
+                                        } else if (typeof value === "number") {
+                                            number.checked = true;
+                                            number.onclick(null);
+
+                                            input.valueAsNumber = value;
+                                            input.onchange();
+                                        } else if (typeof value === "object") {
+                                            variable.checked = true;
+                                            variable.onclick(null);
+
+                                            input.value = value["var"];
+                                            input.onchange();
+                                        }
                                     }
-                                }
 
-                                cancelButton.onclick = function () {
-                                    boolean.checked = false;
-                                    number.checked = false;
-                                    variable.checked = false;
-                                    value.innerHTML = "";
+                                    cancelButton.onclick = function () {
+                                        boolean.checked = false;
+                                        number.checked = false;
+                                        variable.checked = false;
+                                        value.innerHTML = "";
 
-                                    const index = advancedIndex(what, output);
+                                        const index = advancedIndex(what, output);
 
-                                    if (index > -1) {
-                                        changes.splice(index, 1);
-                                        what.splice(index, 1);
-                                    }
-                                };
-                            });
+                                        if (index > -1) {
+                                            changes.splice(index, 1);
+                                            what.splice(index, 1);
+                                        }
+                                    };
+                                });
 
-                            modal.appendChild(cancel);
-                            modal.appendChild(okBtn);
-                            modal.appendChild(table);
+                                modal.appendChild(cancel);
+                                modal.appendChild(okBtn);
+                                modal.appendChild(table);
 
-                            modals.push(modal);
+                                modals.push(modal);
 
-                            document.body.appendChild(modal);
+                                document.body.appendChild(modal);
+                            }
                         }
                     };
                     break;
@@ -535,44 +539,46 @@ Flowol.prototype.clickHandler = function (e, mimic) {
                     thisShape.setAttribute("class", "shape delay-shape");
                     thisShape.onclick = function () {
                         if (!document.getElementById("ghost")) {
-                            this.classList.add("editing");
+                            if (!cursor) {
+                                this.classList.add("editing");
 
-                            let modal = document.createElement("dialog");
+                                let modal = document.createElement("dialog");
 
-                            modal.setAttribute("open", "open");
-                            let title = document.createElement("h3");
-                            title.innerText = "Edit Delay";
-                            let cancel = document.createElement("button");
-                            cancel.innerText = "Cancel";
-                            cancel.setAttribute("class", "cancel");
-                            cancel.onclick = function () {
-                                closeModals();
-                            };
+                                modal.setAttribute("open", "open");
+                                let title = document.createElement("h3");
+                                title.innerText = "Edit Delay";
+                                let cancel = document.createElement("button");
+                                cancel.innerText = "Cancel";
+                                cancel.setAttribute("class", "cancel");
+                                cancel.onclick = function () {
+                                    closeModals();
+                                };
 
-                            let duration = document.createElement("input");
-                            duration.setAttribute("class", "input");
-                            duration.type = "number";
-                            duration.oninput = function () {
-                                okBtn.disabled = duration.valueAsNumber <= 0;
-                            };
+                                let duration = document.createElement("input");
+                                duration.setAttribute("class", "input");
+                                duration.type = "number";
+                                duration.oninput = function () {
+                                    okBtn.disabled = duration.valueAsNumber <= 0;
+                                };
 
-                            let okBtn = document.createElement("button");
-                            okBtn.innerText = "OK";
-                            okBtn.disabled = true;
-                            okBtn.onclick = function () {
-                                thisShape.innerHTML = "Delay " + duration.value + "s";
-                                setShape(thisShape, "type", "delay");
-                                setShape(thisShape, "duration", okBtn.valueAsNumber * 1000);
-                                closeModals();
-                            };
+                                let okBtn = document.createElement("button");
+                                okBtn.innerText = "OK";
+                                okBtn.disabled = true;
+                                okBtn.onclick = function () {
+                                    thisShape.innerHTML = "Delay " + duration.value + "s";
+                                    setShape(thisShape, "type", "delay");
+                                    setShape(thisShape, "duration", okBtn.valueAsNumber * 1000);
+                                    closeModals();
+                                };
 
-                            modal.appendChild(title);
-                            modal.appendChild(duration);
-                            modal.appendChild(okBtn);
+                                modal.appendChild(title);
+                                modal.appendChild(duration);
+                                modal.appendChild(okBtn);
 
-                            modals.push(modal);
+                                modals.push(modal);
 
-                            document.body.appendChild(modal);
+                                document.body.appendChild(modal);
+                            }
                         }
                     };
                     break;
@@ -581,25 +587,27 @@ Flowol.prototype.clickHandler = function (e, mimic) {
 
                     thisShape.onclick = function () {
                         if (!document.getElementById("ghost")) {
-                            this.classList.add("editing");
+                            if (!cursor) {
+                                this.classList.add("editing");
 
-                            let modal = document.createElement("dialog");
+                                let modal = document.createElement("dialog");
 
-                            modal.setAttribute("open", "open");
-                            let title = document.createElement("h3");
-                            title.innerText = "Edit decision";
-                            let cancel = document.createElement("button");
-                            cancel.innerText = "Cancel";
-                            cancel.setAttribute("class", "cancel");
-                            cancel.onclick = function () {
-                                closeModals();
-                            };
+                                modal.setAttribute("open", "open");
+                                let title = document.createElement("h3");
+                                title.innerText = "Edit decision";
+                                let cancel = document.createElement("button");
+                                cancel.innerText = "Cancel";
+                                cancel.setAttribute("class", "cancel");
+                                cancel.onclick = function () {
+                                    closeModals();
+                                };
 
-                            modal.appendChild(title);
+                                modal.appendChild(title);
 
-                            modals.push(modal);
+                                modals.push(modal);
 
-                            document.body.appendChild(modal);
+                                document.body.appendChild(modal);
+                            }
                         }
                     };
                     break;

@@ -137,8 +137,9 @@ class Flowol {
                             }
 
                             if (isCorrect) {
-                                sendOff(thread["true"], 0);
-                            } else {
+                                if (thread["true"])
+                                    sendOff(thread["true"], 0);
+                            } else if (thread["false"]) {
                                 sendOff(thread["false"], 0)
                             }
                             break;

@@ -184,9 +184,12 @@ body {
 
 .shape.output-shape, .ghost.output-ghost {
     margin-left: 7px;
-    width: 120px;
-    height: 60px;
-    padding-left: 20px;
+    min-width: 120px;
+    max-width: 180px;
+    min-height: 60px;
+    max-height: 150px;
+    padding: 0 20px;
+    text-align: center;
     transform: skew(-30deg, 0deg);
 }
 
@@ -209,8 +212,8 @@ body {
     width: 64px;
     height: 24px;
     transform: skew(68deg, -24deg);
-    border-top-width: 1px;
-    border-bottom-width: 1px;
+    border-top-width: 1px !important;
+    border-bottom-width: 1px !important;
 }
 
 .bad {
